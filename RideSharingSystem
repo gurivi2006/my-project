@@ -1,0 +1,101 @@
+import java.util.Scanner;
+
+class InvalidRideTypeException extends Exception {
+    public InvalidRideTypeException(String message) {
+        super(message);
+    }
+}
+
+
+abstract class Ride {
+    private String driverName;
+    private String vehicleNumber;
+    private double distance;
+
+    public Ride(String driverName, String vehicleNumber, double distance) {
+        this.driverName = driverName;
+        this.vehicleNumber = vehicleNumber;
+        this.distance = distance;
+    }
+
+    public String getDriverName() { return driverName; }
+    public String getVehicleNumber() { return vehicleNumber; }
+    public double getDistance() { return distance; }
+
+    public abstract double calculateFare();
+}
+
+class BikeRide extends Ride {
+    public BikeRide(String driverName, String vehicleNumber, double distance) {
+        super(driverName, vehicleNumber, distance);
+    }
+
+    public double calculateFare() {
+        return getDistance() * 20;
+    }
+}
+
+class CarRide extends Ride {
+    public CarRide(String driverName, String vehicleNumber, double distance) {
+        super(driverName, vehicleNumber, distance);
+    }    public double calculateFare() {
+        return getDistance() * 40;
+    }
+}
+class CycleRide extends Ride {
+    public CycleRide(String driverName, String vehicleNumber, double distance) {
+        super(driverName, vehicleNumber, distance);
+    }    public double calculateFare() {
+        return getDistance() * 10;
+    }
+}
+class AutoRide extends Ride {
+    public AutoRide(String driverName, String vehicleNumber, double distance) {
+        super(driverName, vehicleNumber, distance);
+    }    public double calculateFare() {
+        return getDistance() * 30;
+    }
+}
+
+public class RideSharingSystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        try {
+            String rideType = sc.nextLine().trim().toLowerCase();
+            double distance = Double.parseDouble(sc.nextLine().trim());
+
+            if (distance <= 0) {
+                System.out.println("Distance must be greater than 0");
+                sc.close();
+                return;
+            }
+
+            Ride ride;
+            
+            if (rideType.equals("bike")) {
+                ride = new BikeRide("guru", "AP01AB4567", distance);
+            } else if (rideType.equals("train")) {
+                ride = new CarRide("Madhu", "AP05CD5978", distance);
+            } else if(rideType.equals("cycle")){
+                ride = new CycleRide("afreedd", "AP05CD8568", distance);
+            } else if(rideType.equals("auto")){
+                ride = new CycleRide("karthik", "AP05CD4958", distance);
+            }
+             else {
+                throw new InvalidRideTypeException("Invalid ride type");
+            }
+
+            System.out.println("Driver Name: " + ride.getDriverName());
+            System.out.println("Vehicle No: " + ride.getVehicleNumber());
+            System.out.printf("Distance: %.1f km\n", ride.getDistance());
+            System.out.printf("Fare: ₹%.1f\n", ride.calculateFare());
+
+        } catch (InvalidRideTypeException e) {
+            System.out.println(e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Invalid input");
+        } finally {
+            sc.close();
+        }
+    }
+}
